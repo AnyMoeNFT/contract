@@ -1,0 +1,29 @@
+{
+  "name": "anymoe-contract",
+  "version": "0.0.1",
+  "description": "Contracts for project AnyMoe",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnyMoeNFT/contract.git"
+  },
+  "author": "AnyMoeNFT",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/AnyMoeNFT/contract/issues"
+  },
+  "homepage": "https://github.com/AnyMoeNFT/contract#readme",
+  "devDependencies": {
+    "@nomiclabs/hardhat-etherscan": "^2.1.7",
+    "@nomiclabs/hardhat-truffle5": "^2.0.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@nomiclabs/hardhat-web3": "^2.0.0",
+    "hardhat": "^2.6.7",
+    "web3": "^1.6.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.3.2"
+  }
+}
