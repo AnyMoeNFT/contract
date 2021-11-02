@@ -254,7 +254,7 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
         address to,
         address creator,
         uint256 id,
-        string memory uri,
+        string memory _uri,
         uint256 amount,
         bytes memory data
     ) internal virtual {
@@ -266,7 +266,7 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
 
         _balances[to][id] += amount;
         _tokenInfos[id].creator = creator;
-        _tokenInfos[id].uri = uri;
+        _tokenInfos[id].uri = _uri;
         emit TransferSingle(operator, address(0), to, id, amount);
 
         _doSafeTransferAcceptanceCheck(operator, address(0), to, id, amount, data);

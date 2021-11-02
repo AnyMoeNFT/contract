@@ -20,6 +20,14 @@ async function main() {
   await anymoenft.deployed();
 
   console.log("AnyMoeNFT deployed to:", anymoenft.address);
+
+  const AnyMoeAuction = await hre.ethers.getContractFactory("AnyMoeAuction");
+  const anymoeauction = await AnyMoeAuction.deploy(anymoenft.address);
+
+  await anymoeauction.deployed();
+
+  console.log("AnyMoeAuction deployed to:", anymoeauction.address);
+
 }
 
 // We recommend this pattern to be able to use async/await everywhere
