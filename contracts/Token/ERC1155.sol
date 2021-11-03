@@ -252,7 +252,6 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
      */
     function _mintNFT(
         address to,
-        address creator,
         uint256 id,
         string memory _uri,
         uint256 amount,
@@ -265,7 +264,7 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
         _beforeTokenTransfer(operator, address(0), to, _asSingletonArray(id), _asSingletonArray(amount), data);
 
         _balances[to][id] += amount;
-        _tokenInfos[id].creator = creator;
+        _tokenInfos[id].creator = operator;
         _tokenInfos[id].uri = _uri;
         emit TransferSingle(operator, address(0), to, id, amount);
 

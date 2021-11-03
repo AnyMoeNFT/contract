@@ -11,11 +11,10 @@ contract AnyMoeNFT is ERC1155 {
     
     function mintNFT(
         address to,
-        address creator,
         uint256 amount,
         string memory uri
     ) public virtual {
-        _mintNFT(to, creator, tokenCount, uri, amount, "");
+        _mintNFT(to, tokenCount, uri, amount, "");
         tokenCount ++;
     }
     
