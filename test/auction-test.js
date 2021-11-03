@@ -15,6 +15,10 @@ contract("AnyMoeAuction", (accounts) => {
     let result = await auctionInstance.placeBid(auctionId, {from: accounts[0], value: web3.utils.toWei("0.5")})
     console.log(result.logs[0].args)
 
-    
+    result = await auctionInstance.placeBid(auctionId, {from: accounts[1], value: web3.utils.toWei("0.6")})
+    console.log(result.logs[0].args)
+
+    result = await auctionInstance.withdrawBid(auctionId, {from: accounts[0]})
+    console.log(result.logs[0].args)
   });
 });
