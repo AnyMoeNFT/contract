@@ -6,11 +6,15 @@ contract("AnyMoeAuction", (accounts) => {
     const nftInstance = await AnyMoeNFT.new();
     const auctionInstance = await AnyMoeAuction.new(nftInstance.address, 1);
 
-    await nftInstance.mintNFT(accounts[0], 1, "uri://")
+    await nftInstance.mintNFT(accounts[0], 1, "uri://", {from: accounts[0]})
     await nftInstance.safeTransferFrom(accounts[0], auctionInstance.address, 0, 1, new Uint8Array(), {from: accounts[0]})
     
-    let auction = await auctionInstance.createAuction(0, 1, web3.utils.toWei("0.5"), web3.utils.toWei("0.001"), 86400)
-    console.log(auction.logs[0].args.auctionId.toNumber())
+    let auction = await auctionInstance.createAuction(0, 1, web3.utils.toWei("0.5"), web3.utils.toWei("0.001"), 86400, {from: accounts[0]})
+    let auctionId = auction.logs[0].args.auctionId.toNumber()
 
+    let result = await auctionInstance.placeBid(auctionId, {from: accounts[0], value: web3.utils.toWei("0.5")})
+    console.log(result.logs[0].args)
+
+    
   });
 });
