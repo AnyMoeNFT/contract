@@ -22,7 +22,7 @@ async function main() {
   console.log("AnyMoeNFT deployed to:", anymoenft.address);
 
   const AnyMoeAuction = await hre.ethers.getContractFactory("AnyMoeAuction");
-  const anymoeauction = await AnyMoeAuction.deploy(anymoenft.address);
+  const anymoeauction = await AnyMoeAuction.deploy(anymoenft.address, 1);
 
   await anymoeauction.deployed();
 
