@@ -1,4 +1,8 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 require("@nomiclabs/hardhat-truffle5");
+require("@nomiclabs/hardhat-waffle");
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
@@ -14,8 +18,5 @@ module.exports = {
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
     currency: "USD",
-  },
-  etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
-  },
+  }
 };
