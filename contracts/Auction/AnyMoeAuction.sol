@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPLv3
 pragma solidity ^0.8.4;
 
 import "./AnyMoeAuctionInterface.sol";
@@ -49,13 +50,21 @@ contract AnyMoeAuction is Context, ERC165, IERC1155Receiver, AnyMoeNFTAuctionInt
         _fee_percentage = fee_percentage;
     }
 
-    function adminChangeFee(uint fee_percentage) public virtual {
+    modifier OnlyOwner() {
         require(_msgSender() == _owner, "only anymoe team is allowed");
+        _;
+    }
+
+    modifier OnlyNFTContract() {
+        require(_msgSender() == _nft_contract_address, "nft must be from specified contract");
+        _;
+    }
+
+    function adminChangeFee(uint fee_percentage) OnlyOwner public virtual {
         _fee_percentage = fee_percentage;
     }
 
-    function adminWithdrawFee() public virtual {
-        require(_msgSender() == _owner, "only anymoe team is allowed");
+    function adminWithdrawFee() OnlyOwner public virtual {
         _owner.transfer(_fee);
         _fee = 0;
     }
@@ -64,15 +73,13 @@ contract AnyMoeAuction is Context, ERC165, IERC1155Receiver, AnyMoeNFTAuctionInt
         return interfaceId == type(IERC1155Receiver).interfaceId;
     }
 
-    function onERC1155Received(address _operator, address _from, uint256 _id, uint256 _value, bytes calldata _data) external virtual override returns(bytes4) {
-        require(_msgSender() == _nft_contract_address, "nft must be from specified contract");
+    function onERC1155Received(address _operator, address _from, uint256 _id, uint256 _value, bytes calldata _data) OnlyNFTContract external virtual override returns(bytes4) {
         _nft_balances[_from][_id] += _value;
         emit TransferIn(_from, _id, _value);
         return this.onERC1155Received.selector;
     }
 
-    function onERC1155BatchReceived(address _operator, address _from, uint256[] calldata _ids, uint256[] calldata _values, bytes calldata _data) external virtual override returns(bytes4) {
-        require(_msgSender() == _nft_contract_address, "nft must be from specified contract");
+    function onERC1155BatchReceived(address _operator, address _from, uint256[] calldata _ids, uint256[] calldata _values, bytes calldata _data) OnlyNFTContract external virtual override returns(bytes4) {
         require(_ids.length == _values.length, "ids and amounts length mismatch");
         for (uint256 i = 0; i < _ids.length; ++i) {
             _nft_balances[_from][_ids[i]] += _values[i];
