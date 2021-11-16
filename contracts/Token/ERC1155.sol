@@ -252,6 +252,7 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
      * acceptance magic value.
      */
     function _mintNFT(
+        address creator,
         address to,
         uint256 id,
         string memory _uri,
@@ -260,16 +261,14 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
     ) internal virtual {
         require(to != address(0), "ERC1155: mint to the zero address");
 
-        address operator = _msgSender();
-
-        _beforeTokenTransfer(operator, address(0), to, _asSingletonArray(id), _asSingletonArray(amount), data);
+        _beforeTokenTransfer(creator, address(0), to, _asSingletonArray(id), _asSingletonArray(amount), data);
 
         _balances[to][id] += amount;
-        _tokenInfos[id].creator = operator;
+        _tokenInfos[id].creator = creator;
         _tokenInfos[id].uri = _uri;
-        emit TransferSingle(operator, address(0), to, id, amount);
+        emit TransferSingle(creator, address(0), to, id, amount);
 
-        _doSafeTransferAcceptanceCheck(operator, address(0), to, id, amount, data);
+        _doSafeTransferAcceptanceCheck(creator, address(0), to, id, amount, data);
     }
 
     function _mint(

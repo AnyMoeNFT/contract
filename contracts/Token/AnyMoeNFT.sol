@@ -7,14 +7,24 @@ contract AnyMoeNFT is ERC1155 {
     
     uint256 private tokenCount = 0x0;
 
-    constructor() public ERC1155() { }
+    address private _creatorContract;
+
+    constructor(address creatorContract) public ERC1155() {
+        _creatorContract = creatorContract;
+    }
+
+    modifier OnlyCreatorContract {
+        require(_msgSender() == _creatorContract, "only creator contract is allowed");
+        _;
+    }
     
     function mintNFT(
+        address creator,
         address to,
         uint256 amount,
         string memory uri
-    ) public virtual {
-        _mintNFT(to, tokenCount, uri, amount, "");
+    ) OnlyCreatorContract public virtual {
+        _mintNFT(creator, to, tokenCount, uri, amount, "");
         tokenCount ++;
     }
     

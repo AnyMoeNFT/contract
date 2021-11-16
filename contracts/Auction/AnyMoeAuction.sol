@@ -150,12 +150,9 @@ contract AnyMoeAuction is Context, ERC165, IERC1155Receiver, AnyMoeNFTAuctionInt
         require(amount > 0, "you poor");
         _auctions[auctionId].bids[bidder] = 0;
         _auctions[auctionId].bidderCount -= 1;
-        if (!bidder.send(amount)) {
-            _auctions[auctionId].bids[bidder] = amount;
-            _auctions[auctionId].bidderCount += 1;
-        } else {
-            emit WithdrawBid(auctionId, bidder);
-        }
+        bidder.transfer(amount);
+        emit WithdrawBid(auctionId, bidder);
+        
     }
 
     function settleAuction(uint256 auctionId) public payable virtual override {
@@ -185,9 +182,7 @@ contract AnyMoeAuction is Context, ERC165, IERC1155Receiver, AnyMoeNFTAuctionInt
         _auctions[auctionId].withdrawed = true;
         uint fee = _auctions[auctionId].heighestBid * _fee_percentage / 100;
         uint withdraw = _auctions[auctionId].heighestBid - fee;
-        if (!owner.send(withdraw)) {
-            _auctions[auctionId].withdrawed = false;
-        }
+        owner.transfer(withdraw);
         _fee += fee;
         emit WithdrawAuction(auctionId, owner, withdraw);
     }
