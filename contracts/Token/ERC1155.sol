@@ -56,6 +56,10 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
         return _tokenInfos[id].uri;
     }
 
+    function getCreator(uint256 id) public view virtual returns (address) {
+        return _tokenInfos[id].creator;
+    }
+
     /**
      * @dev See {IERC1155-balanceOf}.
      *

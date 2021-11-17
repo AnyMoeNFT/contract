@@ -9,7 +9,7 @@ contract AnyMoeNFT is ERC1155 {
 
     address private _creatorContract;
 
-    constructor(address creatorContract) public ERC1155() {
+    constructor(address creatorContract) ERC1155() {
         _creatorContract = creatorContract;
     }
 
@@ -26,6 +26,10 @@ contract AnyMoeNFT is ERC1155 {
     ) OnlyCreatorContract public virtual {
         _mintNFT(creator, to, tokenCount, uri, amount, "");
         tokenCount ++;
+    }
+
+    function burnNFT(uint256 id, uint256 amount) public virtual {
+        _burn(_msgSender(), id, amount);
     }
     
 }

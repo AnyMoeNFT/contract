@@ -2,6 +2,7 @@
 pragma solidity ^0.8.4;
 
 import "./AnyMoeAuctionInterface.sol";
+import "../Token/AnyMoeNFT.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
@@ -14,7 +15,7 @@ contract AnyMoeAuction is Context, ERC165, IERC1155Receiver, AnyMoeNFTAuctionInt
     address payable private _owner;
 
     address private _nft_contract_address;
-    IERC1155 private _nft_contract;
+    AnyMoeNFT private _nft_contract;
 
     uint256 private _increment_auction_id = 0x0;
 
@@ -42,12 +43,14 @@ contract AnyMoeAuction is Context, ERC165, IERC1155Receiver, AnyMoeNFTAuctionInt
     uint private _fee;
 
     uint private _fee_percentage;
+    uint private _creator_fee_percentage;
 
-    constructor(address nft_address, uint fee_percentage) {
+    constructor(address nft_address, uint fee_percentage, uint creator_fee_percentage) {
         _owner = payable(_msgSender());
         _nft_contract_address = nft_address;
-        _nft_contract = IERC1155(nft_address);
+        _nft_contract = AnyMoeNFT(nft_address);
         _fee_percentage = fee_percentage;
+        _creator_fee_percentage = creator_fee_percentage;
     }
 
     modifier OnlyOwner() {
@@ -60,13 +63,18 @@ contract AnyMoeAuction is Context, ERC165, IERC1155Receiver, AnyMoeNFTAuctionInt
         _;
     }
 
-    function adminChangeFee(uint fee_percentage) OnlyOwner public virtual {
+    function adminChangeFee(uint fee_percentage, uint creator_fee_percentage) OnlyOwner public virtual {
         _fee_percentage = fee_percentage;
+        _creator_fee_percentage = creator_fee_percentage;
     }
 
     function adminWithdrawFee() OnlyOwner public virtual {
         _owner.transfer(_fee);
         _fee = 0;
+    }
+
+    function getFeeRate() view external override returns(uint, uint) {
+        return (_fee_percentage, _creator_fee_percentage);
     }
 
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
@@ -152,7 +160,6 @@ contract AnyMoeAuction is Context, ERC165, IERC1155Receiver, AnyMoeNFTAuctionInt
         _auctions[auctionId].bidderCount -= 1;
         bidder.transfer(amount);
         emit WithdrawBid(auctionId, bidder);
-        
     }
 
     function settleAuction(uint256 auctionId) public payable virtual override {
@@ -180,10 +187,17 @@ contract AnyMoeAuction is Context, ERC165, IERC1155Receiver, AnyMoeNFTAuctionInt
         require(_auctions[auctionId].withdrawed == false, "already withdrawed");
         require(_auctions[auctionId].startTime + _auctions[auctionId].duration < block.timestamp, "auction continue");
         _auctions[auctionId].withdrawed = true;
-        uint fee = _auctions[auctionId].heighestBid * _fee_percentage / 100;
-        uint withdraw = _auctions[auctionId].heighestBid - fee;
-        owner.transfer(withdraw);
-        _fee += fee;
+        address payable creator = payable(_nft_contract.getCreator(_auctions[auctionId].tokenId));
+        uint withdraw;
+        if(_auctions[auctionId].owner == creator) {
+            withdraw = _auctions[auctionId].heighestBid;
+            owner.transfer(withdraw);
+        } else {
+            uint creator_fee = _auctions[auctionId].heighestBid * _creator_fee_percentage / 100;
+            withdraw = _auctions[auctionId].heighestBid - creator_fee;
+            owner.transfer(withdraw);
+            creator.transfer(creator_fee);
+        }
         emit WithdrawAuction(auctionId, owner, withdraw);
     }
 

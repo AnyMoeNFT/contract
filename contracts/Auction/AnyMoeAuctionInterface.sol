@@ -19,4 +19,7 @@ interface AnyMoeNFTAuctionInterface {
     function withdrawBid(uint256 auctionId) external;
     function withdrawAuction(uint256 auctionId) external;
     function cancelAuction(uint256 auctionId) external;
+
+    //function getAuction(uint256 auctionId) view external;
+    function getFeeRate() view external returns(uint, uint);
 }
