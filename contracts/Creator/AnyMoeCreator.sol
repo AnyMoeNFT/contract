@@ -54,6 +54,18 @@ contract AnyMoeCreator is Context {
         _creators[target].invited = _invitedThreshold;
     }
 
+    function isInvited(address target) view public returns(bool) {
+        return _creators[target].invited >= _invitedThreshold;
+    }
+
+    function canInviteMore(address target) view public returns(bool) {
+        return _creators[target].inviteCount <= _inviteThreshold;
+    }
+
+    function isInvitedBy(address target, address inviter) view public returns(bool) {
+        return _creators[target].inviter[inviter];
+    }
+
     function inviteCreator(address target) public virtual {
         require(target != address(0), "zero address");
         address operator = _msgSender();

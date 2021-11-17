@@ -69,12 +69,28 @@ contract AnyMoeAuction is Context, ERC165, IERC1155Receiver, AnyMoeNFTAuctionInt
     }
 
     function adminWithdrawFee() OnlyOwner public virtual {
-        _owner.transfer(_fee);
         _fee = 0;
+        _owner.transfer(_fee);
     }
 
-    function getFeeRate() view external override returns(uint, uint) {
+    function getFeeRate() view public override returns(uint, uint) {
         return (_fee_percentage, _creator_fee_percentage);
+    }
+
+    function getAuction(uint256 auctionId) view public override returns(address, uint256, uint256, uint, uint, uint, uint, bool, bool, uint, address, uint) {
+        Auction storage auc = _auctions[auctionId];
+        return (auc.owner,
+        auc.tokenId,
+        auc.amount,
+        auc.baseBid,
+        auc.bidIncrement,
+        auc.duration,
+        auc.startTime,
+        auc.settled,
+        auc.withdrawed,
+        auc.heighestBid,
+        auc.heighestBidder,
+        auc.bidderCount);
     }
 
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {

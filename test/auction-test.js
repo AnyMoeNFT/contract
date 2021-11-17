@@ -25,5 +25,8 @@ contract("AnyMoeAuction", (accounts) => {
 
     result = await auctionInstance.withdrawBid(auctionId, {from: accounts[0]})
     console.log(result.logs[0].args)
+
+    result = await auctionInstance.getAuction(auctionId, {from: accounts[0]})
+    console.log(result)
   });
 });
