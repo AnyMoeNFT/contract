@@ -14,15 +14,25 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Anymoenft = await hre.ethers.getContractFactory("AnyMoeNFT");
-  const anymoenft = await Anymoenft.deploy();
+  const AnyMoeNFT = await hre.ethers.getContractFactory("AnyMoeNFT");
+  const AnyMoeAuction = await hre.ethers.getContractFactory("AnyMoeAuction");
+  const AnyMoeCreator = await hre.ethers.getContractFactory("AnyMoeCreator");
+
+  const anymoecreator = await AnyMoeCreator.deploy(3, 30);
+
+  await anymoecreator.deployed();
+
+  console.log("AnyMoeCreator deployed to:", anymoecreator.address);
+
+  const anymoenft = await AnyMoeNFT.deploy(anymoecreator.address);
 
   await anymoenft.deployed();
 
   console.log("AnyMoeNFT deployed to:", anymoenft.address);
 
-  const AnyMoeAuction = await hre.ethers.getContractFactory("AnyMoeAuction");
-  const anymoeauction = await AnyMoeAuction.deploy(anymoenft.address, 1);
+  await anymoecreator.setNFTContractAddress(anymoenft.address);
+
+  const anymoeauction = await AnyMoeAuction.deploy(anymoenft.address, 1, 5);
 
   await anymoeauction.deployed();
 
