@@ -18,6 +18,7 @@ contract AnyMoeCreator is Context {
 
     struct CreatorInfo {
         uint8 invited;
+        mapping(address => bool) inviter;
         uint64 inviteCount;
         string info;
     }
@@ -34,7 +35,7 @@ contract AnyMoeCreator is Context {
 
     constructor(uint8 invitedThreshold, uint64 inviteThreshold) {
         _owner = payable(_msgSender());
-        _creators[_owner].invited = true;
+        _creators[_owner].invited = invitedThreshold;
         _invitedThreshold = invitedThreshold;
         _inviteThreshold = inviteThreshold;
     }
@@ -49,14 +50,20 @@ contract AnyMoeCreator is Context {
         _inviteThreshold = inviteThreshold;
     }
 
+    function adminInvite(address target) OnlyOwner public {
+        _creators[target].invited = _invitedThreshold;
+    }
+
     function inviteCreator(address target) public virtual {
         require(target != address(0), "zero address");
         address operator = _msgSender();
         require(_creators[operator].invited >= _invitedThreshold, "permission denied");
         require(_creators[operator].inviteCount <= _inviteThreshold, "cant invite more");
         require(_creators[target].invited < _invitedThreshold, "already invited");
+        require(!_creators[target].inviter[operator], "invited");
         _creators[operator].inviteCount += 1;
         _creators[target].invited += 1;
+        _creators[target].inviter[operator] = true;
         emit Invited(operator, target);
     }
 
@@ -65,6 +72,12 @@ contract AnyMoeCreator is Context {
         require(_creators[operator].invited >= _invitedThreshold, "permission denied");
         _creators[operator].info = uri;
         emit InfoUpdated(operator);
+    }
+
+    function mintNFT(address to, uint256 amount, string memory uri) public virtual {
+        address operator = _msgSender();
+        require(_creators[operator].invited >= _invitedThreshold, "permission denied");
+        _nft_contract.mintNFT(operator, to, amount, uri);
     }
 
 }
