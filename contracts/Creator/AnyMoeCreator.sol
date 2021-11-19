@@ -58,6 +58,14 @@ contract AnyMoeCreator is Context {
         return _creators[target].invited >= _invitedThreshold;
     }
 
+    function invitedCount(address target) view public returns(uint8) {
+        return _creators[target].invited
+    }
+
+    function inviteCount(address target) view public returns(uint64) {
+        return _creators[target].inviteCount
+    }
+
     function canInviteMore(address target) view public returns(bool) {
         return _creators[target].inviteCount <= _inviteThreshold;
     }
