@@ -74,6 +74,10 @@ contract AnyMoeCreator is Context {
         return _creators[target].inviter[inviter];
     }
 
+    function creatorInfo(address target) view public returns(string) {
+        return _creators[target].info
+    }
+
     function inviteCreator(address target) public virtual {
         require(target != address(0), "zero address");
         address operator = _msgSender();
