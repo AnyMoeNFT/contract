@@ -201,6 +201,7 @@ contract AnyMoeAuction is Context, ERC165, IERC1155Receiver, AnyMoeNFTAuctionInt
         require(owner == _auctions[auctionId].owner, "must be owner");
         require(_auctions[auctionId].startTime != 0, "not start");
         require(_auctions[auctionId].withdrawed == false, "already withdrawed");
+        require(_auctions[auctionId].settled, "not settled");
         require(_auctions[auctionId].startTime + _auctions[auctionId].duration < block.timestamp, "auction continue");
         _auctions[auctionId].withdrawed = true;
         address payable creator = payable(_nft_contract.getCreator(_auctions[auctionId].tokenId));
