@@ -26,7 +26,7 @@ contract AnyMoeCreator is Context {
     mapping(address => CreatorInfo) private _creators;
 
     event Invited(address from, address target);
-    event InfoUpdated(address creator);
+    event InfoUpdated(address creator, string uri);
 
     modifier OnlyOwner() {
         require(_msgSender() == _owner, "only anymoe team is allowed");
@@ -59,11 +59,11 @@ contract AnyMoeCreator is Context {
     }
 
     function invitedCount(address target) view public returns(uint8) {
-        return _creators[target].invited
+        return _creators[target].invited;
     }
 
     function inviteCount(address target) view public returns(uint64) {
-        return _creators[target].inviteCount
+        return _creators[target].inviteCount;
     }
 
     function canInviteMore(address target) view public returns(bool) {
@@ -74,8 +74,8 @@ contract AnyMoeCreator is Context {
         return _creators[target].inviter[inviter];
     }
 
-    function creatorInfo(address target) view public returns(string) {
-        return _creators[target].info
+    function creatorInfo(address target) view public returns(string memory) {
+        return _creators[target].info;
     }
 
     function inviteCreator(address target) public virtual {
@@ -95,7 +95,7 @@ contract AnyMoeCreator is Context {
         address operator = _msgSender();
         require(_creators[operator].invited >= _invitedThreshold, "permission denied");
         _creators[operator].info = uri;
-        emit InfoUpdated(operator);
+        emit InfoUpdated(operator, uri);
     }
 
     function mintNFT(address to, uint256 amount, string memory uri) public virtual {
