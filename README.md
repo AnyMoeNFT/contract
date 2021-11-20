@@ -1,7 +1,8 @@
 # AnyMoe Solidity Contracts
 
 ```shell
-hardhat run --network ropsten scripts/deploy.js
+npx hardhat compile
+npx hardhat run --network ropsten scripts/deploy.js
 ```
 
 AnyMoeCreator deployed to: `0x9BaA189a104bb50a02450ff13b7c5b9897A0113c`
