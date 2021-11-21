@@ -18,15 +18,15 @@ contract AnyMoeCreator is Context {
 
     struct CreatorInfo {
         uint8 invited;
+        bool qualified;
         mapping(address => bool) inviter;
         uint64 inviteCount;
-        string info;
     }
 
     mapping(address => CreatorInfo) private _creators;
 
-    event Invited(address from, address target);
-    event InfoUpdated(address creator, string uri);
+    event Invited(address indexed from, address indexed target);
+    event Qualified(address indexed target);
 
     modifier OnlyOwner() {
         require(_msgSender() == _owner, "only anymoe team is allowed");
@@ -51,11 +51,11 @@ contract AnyMoeCreator is Context {
     }
 
     function adminInvite(address target) OnlyOwner public {
-        _creators[target].invited = _invitedThreshold;
+        _creators[target].qualified = true;
     }
 
     function isInvited(address target) view public returns(bool) {
-        return _creators[target].invited >= _invitedThreshold;
+        return _creators[target].qualified;
     }
 
     function invitedCount(address target) view public returns(uint8) {
@@ -74,28 +74,21 @@ contract AnyMoeCreator is Context {
         return _creators[target].inviter[inviter];
     }
 
-    function creatorInfo(address target) view public returns(string memory) {
-        return _creators[target].info;
-    }
-
     function inviteCreator(address target) public virtual {
         require(target != address(0), "zero address");
         address operator = _msgSender();
-        require(_creators[operator].invited >= _invitedThreshold, "permission denied");
+        require(_creators[operator].qualified, "permission denied");
         require(_creators[operator].inviteCount <= _inviteThreshold, "cant invite more");
-        require(_creators[target].invited < _invitedThreshold, "already invited");
+        require(!_creators[target].qualified, "already invited");
         require(!_creators[target].inviter[operator], "invited");
         _creators[operator].inviteCount += 1;
         _creators[target].invited += 1;
+        if (_creators[target].invited >= _invitedThreshold) {
+            _creators[target].qualified = true;
+            emit Qualified(target);
+        }
         _creators[target].inviter[operator] = true;
         emit Invited(operator, target);
-    }
-
-    function updateCreator(string memory uri) public virtual {
-        address operator = _msgSender();
-        require(_creators[operator].invited >= _invitedThreshold, "permission denied");
-        _creators[operator].info = uri;
-        emit InfoUpdated(operator, uri);
     }
 
     function mintNFT(address to, uint256 amount, string memory uri) public virtual {
