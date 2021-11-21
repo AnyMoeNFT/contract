@@ -1,4 +1,5 @@
 .deps
+.history
 artifacts
 node_modules
 .env
