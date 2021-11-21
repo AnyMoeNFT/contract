@@ -236,14 +236,6 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
         emit URI(newuri, id);
     }
 
-    function _setURIBatch(uint256[] memory ids, string[] memory newuris) internal virtual {
-        require(ids.length == newuris.length, "ERC1155: ids and newuris length mismatch");
-         for (uint256 i = 0; i < ids.length; ++i) {
-             _tokenInfos[ids[i]].uri = newuris[i];
-             emit URI(newuris[i], ids[i]);
-         }
-    }
-
     /**
      * @dev Creates `amount` tokens of token type `id`, and assigns them to `to`.
      *
@@ -269,7 +261,7 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
 
         _balances[to][id] += amount;
         _tokenInfos[id].creator = creator;
-        _tokenInfos[id].uri = _uri;
+        _setURI(id, _uri);
         emit TransferSingle(creator, address(0), to, id, amount);
 
         _doSafeTransferAcceptanceCheck(creator, address(0), to, id, amount, data);

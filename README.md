@@ -6,8 +6,8 @@ npx hardhat run --network ropsten scripts/deploy.js
 ```
 
 In Rinkeby:
-> AnyMoeCreator deployed to: `0x370d771bc0a4d7bC17fBebD98B3A8f525787144a`
+> AnyMoeCreator deployed to: `0x572Dde881acf43fEA17060d8E927b359bF780C2c`
 
-> AnyMoeNFT deployed to: `0xAA4d1e9169EfB87d8a8418c4d2fA714EB3584F15`
+> AnyMoeNFT deployed to: `0xC5f06C1e1D0F353344614B0FBe3a42ecB2CFda00`
 
-> AnyMoeAuction deployed to: `0x731C4470cE379d0aa6a3672f2D151d287dCdBCb0`
+> AnyMoeAuction deployed to: `0xA9CB72c31afE60Bf2601a6A42E197d2336f63B8E`
