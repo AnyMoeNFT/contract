@@ -93,7 +93,7 @@ contract AnyMoeCreator is Context {
 
     function mintNFT(address to, uint256 amount, string memory uri) public virtual {
         address operator = _msgSender();
-        require(_creators[operator].invited >= _invitedThreshold, "permission denied");
+        require(_creators[target].qualified, "permission denied");
         _nft_contract.mintNFT(operator, to, amount, uri);
     }
 
