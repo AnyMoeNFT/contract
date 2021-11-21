@@ -1,4 +1,5 @@
 .deps
+.history
 artifacts
 node_modules
 .env
@@ -6,6 +7,7 @@ coverage
 coverage.json
 typechain
 
-#Hardhat files
+# Hardhat files
 cache
 artifacts
+ethereum-abi-types

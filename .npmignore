@@ -1,3 +1,13 @@
 hardhat.config.js
 scripts
 test
+.eslintignore
+.eslintrc.js
+.prettierignore
+.solhint.json
+.solhintignore
+hardhat.config.js
+cache
+/contracts
+*.dbg.json
+.history
