@@ -5,9 +5,9 @@ npx hardhat compile
 npx hardhat run --network ropsten scripts/deploy.js
 ```
 
-In Rinkeby:
-> AnyMoeCreator deployed to: `0x572Dde881acf43fEA17060d8E927b359bF780C2c`
+In Polygon Testnet Mumbai:
+> AnyMoeCreator deployed to: `0x0B3eEFEa1306A7614dD18FE09732dE6763569553`
 
-> AnyMoeNFT deployed to: `0xC5f06C1e1D0F353344614B0FBe3a42ecB2CFda00`
+> AnyMoeNFT deployed to: `0x1054B0E3c535cefE9Ee98A6fCa7BD0f8F42c0297`
 
-> AnyMoeAuction deployed to: `0xA9CB72c31afE60Bf2601a6A42E197d2336f63B8E`
+> AnyMoeAuction deployed to: `0xc5BbB1ADc5885EA8049612Eb767588096D7E2ca9`

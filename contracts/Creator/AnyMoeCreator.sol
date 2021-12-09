@@ -35,7 +35,7 @@ contract AnyMoeCreator is Context {
 
     constructor(uint8 invitedThreshold, uint64 inviteThreshold) {
         _owner = payable(_msgSender());
-        _creators[_owner].invited = invitedThreshold;
+        _creators[_owner].qualified = true;
         _invitedThreshold = invitedThreshold;
         _inviteThreshold = inviteThreshold;
     }
@@ -43,6 +43,10 @@ contract AnyMoeCreator is Context {
     function setNFTContractAddress(address nft_address) OnlyOwner public {
         _nft_contract_address = nft_address;
         _nft_contract = AnyMoeNFT(nft_address);
+    }
+
+    function migrateCreatorContract(address new_creator_address) OnlyOwner public {
+        _nft_contract.changeCreatorContract(new_creator_address);
     }
 
     function setThreshold(uint8 invitedThreshold, uint64 inviteThreshold) OnlyOwner public {
@@ -93,7 +97,7 @@ contract AnyMoeCreator is Context {
 
     function mintNFT(address to, uint256 amount, string memory uri) public virtual {
         address operator = _msgSender();
-        require(_creators[target].qualified, "permission denied");
+        require(_creators[operator].qualified, "permission denied");
         _nft_contract.mintNFT(operator, to, amount, uri);
     }
 

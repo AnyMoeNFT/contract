@@ -9,6 +9,8 @@ contract AnyMoeNFT is ERC1155 {
 
     address private _creatorContract;
 
+    event MintNFT(address indexed creator, address indexed to, uint256 id, uint256 amount, string uri);
+
     constructor(address creatorContract) ERC1155() {
         _creatorContract = creatorContract;
     }
@@ -18,6 +20,10 @@ contract AnyMoeNFT is ERC1155 {
         _;
     }
     
+    function changeCreatorContract(address target) OnlyCreatorContract public {
+        _creatorContract = target;
+    }
+    
     function mintNFT(
         address creator,
         address to,
@@ -25,11 +31,8 @@ contract AnyMoeNFT is ERC1155 {
         string memory uri
     ) OnlyCreatorContract public virtual {
         _mintNFT(creator, to, tokenCount, uri, amount, "");
+        emit MintNFT(creator, to, tokenCount, amount, uri);
         tokenCount ++;
-    }
-
-    function burnNFT(uint256 id, uint256 amount) public virtual {
-        _burn(_msgSender(), id, amount);
     }
     
 }

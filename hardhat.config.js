@@ -3,6 +3,7 @@ dotenv.config();
 
 require("@nomiclabs/hardhat-truffle5");
 require("@nomiclabs/hardhat-waffle");
+require('@openzeppelin/hardhat-upgrades');
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
